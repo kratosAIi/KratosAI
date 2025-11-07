@@ -80,6 +80,19 @@ export const revokeAllUserTokens = async (userId) => {
   });
 };
 
+export const revokeOtherUserTokens = async (userId, currentRefreshToken) => {
+  await prisma.refreshToken.updateMany({
+    where: { 
+      userId,
+      revoked: false,
+      token: {
+        not: currentRefreshToken,
+      },
+    },
+    data: { revoked: true },
+  });
+};
+
 export const cleanupExpiredTokens = async () => {
   await prisma.refreshToken.deleteMany({
     where: {

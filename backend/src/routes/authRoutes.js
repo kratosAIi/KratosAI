@@ -4,7 +4,7 @@ import {
   login,
   refresh,
   logout,
-  logoutAll,
+  logoutOtherDevices,
   verifyEmail,
   requestPasswordReset,
   resetPassword,
@@ -20,7 +20,7 @@ router.post('/signup', validate(signupSchema), signup);
 router.post('/login', validate(loginSchema), login);
 router.post('/refresh', refresh);
 router.post('/logout', logout);
-router.post('/logout-all', authenticateToken, logoutAll);
+router.post('/logout-other-devices', authenticateToken, logoutOtherDevices);
 router.get('/verify-email', verifyEmail);
 router.post('/request-password-reset', validate(emailSchema), requestPasswordReset);
 router.post('/reset-password', validate(resetPasswordSchema), resetPassword);

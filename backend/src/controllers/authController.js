@@ -15,7 +15,8 @@ import {
   generateTokens, 
   rotateRefreshToken, 
   revokeRefreshToken,
-  revokeAllUserTokens 
+  revokeAllUserTokens,
+  revokeOtherUserTokens
 } from '../services/tokenService.js';
 import { sendVerificationEmail, sendPasswordResetEmail } from '../services/mailService.js';
 import { AppError } from '../middlewares/errorHandler.js';
@@ -139,21 +140,20 @@ export const logout = async (req, res, next) => {
   }
 };
 
-export const logoutAll = async (req, res, next) => {
+export const logoutOtherDevices = async (req, res, next) => {
   try {
     const userId = req.user.userId;
+    const currentRefreshToken = req.cookies.refreshToken;
 
-    await revokeAllUserTokens(userId);
+    if (!currentRefreshToken) {
+      throw new AppError('Refresh token not found', 401);
+    }
 
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
+    await revokeOtherUserTokens(userId, currentRefreshToken);
 
     res.status(200).json({
       success: true,
-      message: 'Logged out from all devices successfully',
+      message: 'Logged out from all other devices successfully',
     });
   } catch (error) {
     next(error);

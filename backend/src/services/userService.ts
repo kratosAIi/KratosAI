@@ -90,23 +90,25 @@ export const verifyPassword = async (password: string, hashedPassword: string): 
 };
 
 export const updateUserVerification = async (token: string): Promise<UserResponse> => {
+  logger.debug('Looking up user by verification token', { tokenLength: token.length, tokenPreview: token.substring(0, 10) + '...' });
+
   const user = await prisma.user.findFirst({
-    where: { 
+    where: {
       verificationToken: token,
     },
   });
 
   if (!user) {
-    logger.warn('Invalid verification token provided', { token });
+    logger.warn('Invalid verification token provided - no matching user found', { tokenLength: token.length, tokenPreview: token.substring(0, 10) + '...' });
     throw new AppError('Invalid or expired verification token', 400);
   }
 
   logger.info('Verifying user email', { userId: user.id, email: user.email });
   return await prisma.user.update({
     where: { id: user.id },
-    data: { 
-      isVerified: true, 
-      verificationToken: null 
+    data: {
+      isVerified: true,
+      verificationToken: null
     },
     select: {
       id: true,

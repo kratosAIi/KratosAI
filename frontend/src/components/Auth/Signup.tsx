@@ -17,6 +17,8 @@ const Signup: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
+  const [registeredEmail, setRegisteredEmail] = useState<string>('');
   const navigate = useNavigate();
 
   const handleChange: FormChangeHandler = (e) => {
@@ -26,6 +28,7 @@ const Signup: React.FC = () => {
     });
     // Clear error when user starts typing
     if (error) setError('');
+    if (success) setSuccess('');
   };
 
   const handleSubmit: FormSubmitHandler = async (e) => {
@@ -38,6 +41,7 @@ const Signup: React.FC = () => {
 
     setLoading(true);
     setError('');
+    setSuccess('');
 
     try {
       const response = await authService.signup({
@@ -46,14 +50,28 @@ const Signup: React.FC = () => {
         password: formData.password,
       });
 
-      if (response.success && response.data) {
-        // Store auth data
-        authService.setAccessToken(response.data.accessToken);
-        authService.setUser(response.data.user);
+      if (response.success) {
+        // Check if user needs to verify email
+        const message = response.message || '';
 
-        // Redirect to dashboard or show email verification message
-        // TODO: Update this path based on your app's routing
-        navigate('/dashboard');
+        if (message.includes('verify your email')) {
+          // Show success message for email verification
+          setSuccess('Account created successfully! Please check your email to verify your account.');
+          setRegisteredEmail(formData.email);
+
+          // Clear the form
+          setFormData({
+            fullName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+          });
+        } else if (response.data) {
+          // User is already verified (Google OAuth flow)
+          authService.setAccessToken(response.data.accessToken);
+          authService.setUser(response.data.user);
+          navigate('/dashboard');
+        }
       }
     } catch (err: any) {
       setError(err.message || 'Signup failed. Please try again.');
@@ -81,15 +99,19 @@ const Signup: React.FC = () => {
       </div>
 
       {error && (
-        <div style={{
-          padding: '12px',
-          marginBottom: '16px',
-          backgroundColor: '#fee',
-          color: '#c33',
-          borderRadius: '8px',
-          fontSize: '14px'
-        }}>
+        <div className="signup-error-message">
           {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="signup-success-message">
+          <strong>Success!</strong> {success}
+          {registeredEmail && (
+            <p className="signup-success-email">
+              We sent a verification link to <strong>{registeredEmail}</strong>
+            </p>
+          )}
         </div>
       )}
 

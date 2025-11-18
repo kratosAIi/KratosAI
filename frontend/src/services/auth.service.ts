@@ -54,6 +54,10 @@ class AuthService {
     return api.post('/api/auth/reset-password', { token, newPassword });
   }
 
+  async verifyEmail(token: string): Promise<ApiResponse<{ user: any }>> {
+    return api.get(`/api/auth/verify-email?token=${token}`);
+  }
+
   // Google OAuth - redirects to backend OAuth URL
   initiateGoogleLogin(): void {
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';

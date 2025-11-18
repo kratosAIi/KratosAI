@@ -1,5 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
-import { env, isDevelopment } from '../config/env.js';
+import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
 const transporter: Transporter = nodemailer.createTransport({
@@ -30,20 +30,12 @@ This link will expire in 24 hours. If you didn't create an account, please ignor
     `.trim(),
   };
 
-  if (isDevelopment) {
-    logger.info('📧 Verification Email (Development Mode)', {
-      to: email,
-      link: verificationUrl,
-    });
-    return true;
-  }
-
   try {
     await transporter.sendMail(mailOptions);
-    logger.info('Verification email sent successfully', { to: email });
+    logger.info('✅ Verification email sent successfully', { to: email });
     return true;
   } catch (error) {
-    logger.error('Failed to send verification email', error);
+    logger.error('❌ Failed to send verification email', error);
     return false;
   }
 };
@@ -66,20 +58,12 @@ This link will expire in 1 hour. If you didn't request a password reset, please 
     `.trim(),
   };
 
-  if (isDevelopment) {
-    logger.info('📧 Password Reset Email (Development Mode)', {
-      to: email,
-      link: resetUrl,
-    });
-    return true;
-  }
-
   try {
     await transporter.sendMail(mailOptions);
-    logger.info('Password reset email sent successfully', { to: email });
+    logger.info('✅ Password reset email sent successfully', { to: email });
     return true;
   } catch (error) {
-    logger.error('Failed to send password reset email', error);
+    logger.error('❌ Failed to send password reset email', error);
     return false;
   }
 };

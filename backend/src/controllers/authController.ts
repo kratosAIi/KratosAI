@@ -36,16 +36,21 @@ export const signup = async (req: Request, res: Response, next: NextFunction): P
 
     if (!user.isVerified) {
       const verificationToken = crypto.randomBytes(TOKEN.VERIFICATION_LENGTH).toString('hex');
+      logger.info('Generated verification token', { userId: user.id, tokenLength: verificationToken.length, tokenPreview: verificationToken.substring(0, 10) + '...' });
+
       await setVerificationToken(user.id, verificationToken);
-      await sendVerificationEmail(email, verificationToken);
+      logger.info('Verification token saved to database', { userId: user.id });
+
+      const emailSent = await sendVerificationEmail(email, verificationToken);
+      logger.info('Verification email send result', { userId: user.id, email, emailSent });
     }
 
-    const message = user.isVerified 
+    const message = user.isVerified
       ? 'Account synced successfully. You can now login with password.'
       : 'User created successfully. Please verify your email.';
 
     sendCreated(res, { user }, message);
-    logger.info('User signup successful', { userId: user.id, email });
+    logger.info('User signup successful', { userId: user.id, email, isVerified: user.isVerified });
   } catch (error) {
     logger.error('Signup failed', error);
     next(error);
@@ -71,6 +76,12 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
       throw new AuthenticationError('Invalid email or password');
     }
 
+    // Check if email is verified
+    if (!user.isVerified) {
+      logger.warn('Login failed - email not verified', { email });
+      throw new AppError('Please verify your email before logging in. Check your inbox for the verification link.', HTTP_STATUS.FORBIDDEN);
+    }
+
     const { accessToken, refreshToken } = await generateTokens(user.id, user.email);
 
     res.cookie(COOKIE.REFRESH_TOKEN_NAME, refreshToken, {
@@ -89,7 +100,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
         isVerified: user.isVerified,
       },
     }, 'Login successful');
-    
+
     logger.info('User login successful', { userId: user.id, email });
   } catch (error) {
     logger.error('Login failed', error);
@@ -187,13 +198,13 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
       throw new AppError('Verification token required', HTTP_STATUS.BAD_REQUEST);
     }
 
-    logger.info('Verifying email with token');
+    logger.info('Verifying email with token', { tokenLength: token.length, tokenPreview: token.substring(0, 10) + '...' });
     const user = await updateUserVerification(token);
 
     sendSuccess(res, { user }, 'Email verified successfully');
-    logger.info('Email verified successfully', { userId: user.id });
+    logger.info('Email verified successfully', { userId: user.id, email: user.email });
   } catch (error) {
-    logger.error('Email verification failed', error);
+    logger.error('Email verification failed', { error: error instanceof Error ? error.message : 'Unknown error', token: typeof token === 'string' ? token.substring(0, 10) + '...' : 'invalid' });
     next(error);
   }
 };

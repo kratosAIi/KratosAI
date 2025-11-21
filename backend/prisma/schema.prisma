@@ -1,10 +1,12 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -21,6 +23,7 @@ model User {
   updatedAt         DateTime       @updatedAt
   leads             Lead[]
   refreshTokens     RefreshToken[]
+  lenderMeetings    Meeting[]      @relation("LenderMeetings")
 
   @@index([email])
   @@index([googleId])
@@ -47,6 +50,7 @@ model Lead {
   contactPerson     String?
   companyName       String?
   email             String?
+  gmail             String?
   phone             String?
   source            LeadSource   @default(WEBSITE)
   sourceDetails     String?
@@ -104,3 +108,41 @@ enum LeadPriority {
   HIGH
   URGENT
 }
+
+model Meeting {
+  id                  String        @id @default(uuid())
+  calendlyEventUri    String        @unique
+  calendlyEventId     String        @unique
+  title               String
+  startTime           DateTime
+  endTime             DateTime
+  duration            Int           // Duration in minutes
+  meetingLink         String?       // Zoom/Google Meet link (final link after confirmation)
+  platform            String?       // zoom, google_meet, etc.
+  status              MeetingStatus @default(SCHEDULED)
+  lenderId            String
+  lender              User          @relation("LenderMeetings", fields: [lenderId], references: [id], onDelete: Cascade)
+  borrowerId          String        // Borrower email (not a foreign key)
+  rmEmail             String?       // RM email (optional)
+  additionalEmails    String[]      // Additional emails to notify (array)
+  notes               String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  canceledAt          DateTime?
+  cancelReason        String?
+  confirmedAt         DateTime?     // When borrower confirmed via Calendly
+
+  @@index([lenderId])
+  @@index([borrowerId])
+  @@index([startTime])
+  @@index([status])
+}
+
+enum MeetingStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELED
+  NO_SHOW
+}
+
+

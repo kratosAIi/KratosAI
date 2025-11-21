@@ -175,6 +175,7 @@ export const logoutOtherDevices = async (
 
     if (!currentRefreshToken) {
       logger.warn('Logout other devices attempt without refresh token', { userId });
+      
       throw new AuthenticationError('Refresh token not found');
     }
 

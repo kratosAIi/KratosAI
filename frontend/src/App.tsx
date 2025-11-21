@@ -8,6 +8,7 @@ import GoogleCallback from './components/Auth/GoogleCallback';
 import VerifyEmail from './components/Auth/VerifyEmail';
 import { Dashboard } from './components/Dashboard';
 import { LeadsPage, LeadDetailsPage, AddLeadPage } from './components/Leads';
+import { MeetingsPage } from './components/Meetings';
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,8 @@ const App: React.FC = () => {
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/leads/new" element={<AddLeadPage />} />
           <Route path="/leads/:id" element={<LeadDetailsPage />} />
+          {/* Meetings */}
+          <Route path="/meetings" element={<MeetingsPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

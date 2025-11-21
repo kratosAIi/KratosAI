@@ -29,6 +29,12 @@ const envSchema = z.object({
 
   // Frontend
   FRONTEND_URL: z.string().url('Frontend URL must be a valid URL'),
+
+  // Calendly
+  CALENDLY_CLIENT_ID: z.string().min(1, 'Calendly Client ID is required'),
+  CALENDLY_CLIENT_SECRET: z.string().min(1, 'Calendly Client Secret is required'),
+  CALENDLY_WEBHOOK_SIGNING_KEY: z.string().optional(),
+  CALENDLY_REDIRECT_URI: z.string().url('Calendly Redirect URI must be a valid URL'),
 });
 
 type EnvConfig = z.infer<typeof envSchema>;

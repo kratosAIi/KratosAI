@@ -4,7 +4,10 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
 import googleRoutes from './routes/googleRoutes.js';
 import leadRoutes from './routes/leadRoutes.js';
+import meetingRoutes from './routes/meetingRoutes.js';
+import webhookRoutes from './routes/webhookRoutes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { ensureDbConnection } from './middlewares/dbMiddleware.js';
 import { env } from './config/env.js';
 import { logger } from './utils/logger.js';
 
@@ -20,6 +23,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Database connection middleware - ensures DB is connected before processing requests
+app.use(ensureDbConnection);
 
 // Request logging middleware
 app.use((req: Request, _res: Response, next: NextFunction) => {
@@ -43,6 +49,8 @@ app.get('/health', (_req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', googleRoutes);
 app.use('/api/leads', leadRoutes);
+app.use('/api/meetings', meetingRoutes);
+app.use('/api/webhooks', webhookRoutes);
 
 app.use((_req: Request, res: Response) => {
   res.status(404).json({

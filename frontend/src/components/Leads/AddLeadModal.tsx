@@ -14,6 +14,7 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onLeadAdded }) => 
     lastName: '',
     contactPerson: '',
     companyName: '',
+    email: '',
     source: 'WEBSITE',
     sourceDetails: '',
     leadType: undefined,
@@ -121,7 +122,7 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onLeadAdded }) => 
               </div>
             </div>
 
-            {/* Row 2: Contact, Company, Source */}
+            {/* Row 2: Contact, Company, Email */}
             <div className="form-row three-col">
               <div className="form-group">
                 <label htmlFor="contactPerson">Contact Person</label>
@@ -146,6 +147,21 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onLeadAdded }) => 
                 />
               </div>
               <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder=""
+                />
+              </div>
+            </div>
+
+            {/* Row 3: Source, Source Details, Lead Type */}
+            <div className="form-row three-col">
+              <div className="form-group">
                 <label htmlFor="source">Source</label>
                 <select
                   id="source"
@@ -162,23 +178,6 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onLeadAdded }) => 
                   <option value="PARTNER">Partner</option>
                   <option value="OTHER">Other</option>
                 </select>
-              </div>
-            </div>
-
-            {/* Row 3: Deal Value, Source Details, Lead Type */}
-            <div className="form-row three-col">
-              <div className="form-group">
-                <label htmlFor="dealValue">Deal Value</label>
-                <input
-                  type="number"
-                  id="dealValue"
-                  name="dealValue"
-                  value={formData.dealValue || ''}
-                  onChange={handleNumberChange}
-                  placeholder=""
-                  min="0"
-                  step="0.01"
-                />
               </div>
               <div className="form-group">
                 <label htmlFor="sourceDetails">Lead Source Details</label>
@@ -211,8 +210,21 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onLeadAdded }) => 
               </div>
             </div>
 
-            {/* Row 4: Lead Priority, Lead Status, Industry */}
+            {/* Row 4: Deal Value, Lead Priority, Lead Status */}
             <div className="form-row three-col">
+              <div className="form-group">
+                <label htmlFor="dealValue">Deal Value</label>
+                <input
+                  type="number"
+                  id="dealValue"
+                  name="dealValue"
+                  value={formData.dealValue || ''}
+                  onChange={handleNumberChange}
+                  placeholder=""
+                  min="0"
+                  step="0.01"
+                />
+              </div>
               <div className="form-group">
                 <label htmlFor="leadPriority">Lead Priority</label>
                 <input
@@ -253,6 +265,10 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onLeadAdded }) => 
                   <option value="LOST">Lost</option>
                 </datalist>
               </div>
+            </div>
+
+            {/* Row 5: Industry */}
+            <div className="form-row">
               <div className="form-group">
                 <label htmlFor="industry">Industry</label>
                 <input
@@ -266,7 +282,7 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({ onClose, onLeadAdded }) => 
               </div>
             </div>
 
-            {/* Row 5: Initial Notes */}
+            {/* Row 6: Initial Notes */}
             <div className="form-group full-width">
               <label htmlFor="notes">Initial Notes</label>
               <textarea

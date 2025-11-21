@@ -5,13 +5,13 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "dev": "npx tsx watch src/server.ts",
+    "build": "npx tsc",
     "start": "node dist/server.js",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "type-check": "tsc --noEmit"
+    "type-check": "npx tsc --noEmit"
   },
   "keywords": [
     "authentication",
@@ -24,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.7.1",
+    "axios": "^1.13.2",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -35,12 +36,13 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/axios": "^0.9.36",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^24.10.0",
+    "@types/node": "^24.10.1",
     "@types/nodemailer": "^7.0.3",
     "nodemon": "^3.0.2",
     "prisma": "^5.7.1",

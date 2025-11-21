@@ -12,6 +12,7 @@ import {
 /**
  * Initiate Google OAuth flow
  */
+
 export const googleAuth = async (
   _req: Request,
   res: Response,

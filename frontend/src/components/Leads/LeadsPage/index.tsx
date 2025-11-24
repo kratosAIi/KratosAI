@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DashboardLayout } from '../Dashboard';
-import { leadService, Lead, LeadStatus, LeadSource } from '../../services/lead.service';
+import { DashboardLayout } from '../../Dashboard';
+import { leadService, Lead, LeadStatus, LeadSource } from '../../../services/lead.service';
 import './LeadsPage.css';
 
 const LeadsPage: React.FC = () => {

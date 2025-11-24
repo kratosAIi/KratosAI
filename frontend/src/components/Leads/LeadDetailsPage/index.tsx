@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DashboardLayout } from '../Dashboard';
-import { leadService, Lead } from '../../services/lead.service';
-import { meetingService, Meeting } from '../../services/meeting.service';
-import { ScheduleMeetingModal } from '../Meetings';
-import BasicCustomerInfo from './BasicCustomerInfo';
-import subtractIcon from '../../assets/Subtract.png';
+import { DashboardLayout } from '../../Dashboard';
+import { leadService, Lead } from '../../../services/lead.service';
+import { meetingService, Meeting } from '../../../services/meeting.service';
+import { ScheduleMeetingModal } from '../../Meetings';
+import BasicCustomerInfo from '../BasicCustomerInfo';
+import subtractIcon from '../../../assets/Subtract.png';
 import './LeadDetailsPage.css';
 
 type TabType = 'summary' | 'meeting' | 'customer-info' | 'pre-screening' | 'docs-collection';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DashboardLayout } from '../Dashboard';
-import { leadService, CreateLeadData } from '../../services/lead.service';
+import { DashboardLayout } from '../../Dashboard';
+import { leadService, CreateLeadData } from '../../../services/lead.service';
 import './AddLeadPage.css';
 
 const AddLeadPage: React.FC = () => {

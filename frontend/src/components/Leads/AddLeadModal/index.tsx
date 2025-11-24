@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { leadService, CreateLeadData } from '../../services/lead.service';
+import { leadService, CreateLeadData } from '../../../services/lead.service';
 import './AddLeadModal.css';
 
 interface AddLeadModalProps {

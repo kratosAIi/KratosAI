@@ -4,6 +4,7 @@ import { DashboardLayout } from '../Dashboard';
 import { leadService, Lead } from '../../services/lead.service';
 import { meetingService, Meeting } from '../../services/meeting.service';
 import { ScheduleMeetingModal } from '../Meetings';
+import BasicCustomerInfo from './BasicCustomerInfo';
 import subtractIcon from '../../assets/Subtract.png';
 import './LeadDetailsPage.css';
 
@@ -214,7 +215,7 @@ const LeadDetailsPage: React.FC = () => {
             <div className="contact-links">
               {lead.contactPerson && (
                 <div className="contact-person">
-                  <span className="contact-label">Contact:</span> {lead.contactPerson}
+                  <span className="contact-label"></span> {lead.contactPerson}
                 </div>
               )}
               {lead.phone && (
@@ -224,7 +225,7 @@ const LeadDetailsPage: React.FC = () => {
               )}
               {lead.email && (
                 <a href={`mailto:${lead.email}`} className="contact-link email-link" title="Email">
-                  ✉️ {lead.email}
+                  {lead.email}
                 </a>
               )}
               {!lead.phone && !lead.email && !lead.contactPerson && (
@@ -532,7 +533,13 @@ const LeadDetailsPage: React.FC = () => {
          
         )}
 
-        {activeTab !== 'summary' && activeTab !== 'meeting' && (
+        {activeTab === 'customer-info' && (
+          <div className="tab-content">
+            <BasicCustomerInfo leadId={id} />
+          </div>
+        )}
+
+        {(activeTab === 'pre-screening' || activeTab === 'docs-collection') && (
           <div className="tab-content">
             <div className="coming-soon">
               <p>This section is coming soon.</p>
